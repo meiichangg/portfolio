@@ -1,0 +1,149 @@
+/* =========================================================
+   Chang.cee — bản 3: kết hợp Yuya (chữ, bố cục) + Polo (card, chiều sâu)
+   Nạp sau ../polo/polo.css và chỉ ghi đè phần khác biệt.
+   ========================================================= */
+
+:root {
+  --font: "Inter", "Noto Sans SC", system-ui, sans-serif;
+}
+/* Sáng = tinh thần Yuya: trắng tinh, card phẳng */
+:root[data-theme="light"] {
+  --bg: #ffffff;
+  --card: #f4f4f4;
+  --card-2: #efefef;
+  --chip: #ffffff;
+  --ink: #000000;
+  --ink-2: #1f1f1f;
+  --muted: #7a7a7a;
+  --faint: #b5b5b5;
+  --line: #e6e6e6;
+  --line-2: #d6d6d6;
+  --shadow: none;
+  --shadow-soft: none;
+  --glow: rgba(0, 0, 0, 0.035);
+  --btn-bg: #000000;
+  --btn-ink: #ffffff;
+}
+html[lang="zh"] { --font: "Noto Sans SC", "Inter", system-ui, sans-serif; }
+
+body { font-weight: 500; letter-spacing: -0.03em; }
+html[lang="zh"] body { letter-spacing: 0; }
+
+.line-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.line-mask > span { display: inline-block; }
+
+/* nav: Polo pill + Yuya wordmark */
+.logo { font-size: 20px; font-weight: 700; letter-spacing: -0.06em; text-transform: uppercase; }
+.nav__links a { letter-spacing: -0.04em; }
+.btn { border-radius: 999px; letter-spacing: -0.02em; font-weight: 500; }
+.icon-btn { border-radius: 999px; }
+
+/* ---------- Hero: Yuya giant name ---------- */
+.mhero { padding-top: clamp(120px, 14vw, 160px); }
+.mhero__top { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
+.mhero__name { margin: 0; font-size: clamp(3.2rem, 11.2vw, 13rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.075em; text-transform: uppercase; }
+html[lang="zh"] .mhero__name { letter-spacing: -0.06em; }
+.mhero__name .row { display: block; overflow: hidden; padding: 0.04em 0.06em 0.02em 0; margin-left: -0.04em; }
+.mhero__name .word { display: inline-block; white-space: nowrap; }
+.mhero__name .dim { color: var(--faint); }
+.mhero__name .char { display: inline-block; }
+.mavatar { position: relative; width: clamp(64px, 10vw, 136px); aspect-ratio: 1; border-radius: 50%; overflow: hidden; background: var(--card); box-shadow: var(--shadow); margin-top: 0.8vw; }
+.mavatar img { width: 100%; height: 100%; object-fit: cover; }
+.mavatar .about__mono { font-size: clamp(18px, 2.4vw, 32px); font-weight: 600; }
+.mhero__bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: clamp(40px, 7vw, 96px); align-items: start; }
+.mhero__bottom .chip { margin-bottom: 18px; }
+.mail { display: flex; align-items: center; gap: 10px; font-size: clamp(18px, 2.4vw, 26px); letter-spacing: -0.06em; margin-bottom: 22px; }
+.mail .icon-btn { width: 38px; height: 38px; font-size: 15px; background: var(--card); box-shadow: var(--shadow-soft); }
+.intro { margin: 0; font-size: clamp(1.35rem, 3vw, 2.2rem); line-height: 1.22; letter-spacing: -0.06em; text-wrap: pretty; }
+html[lang="zh"] .intro { letter-spacing: -0.01em; line-height: 1.45; }
+.intro em { font-style: normal; color: var(--faint); }
+@media (max-width: 760px) {
+  .mhero__bottom { grid-template-columns: 1fr; }
+  .intro { order: -1; }
+}
+@media (max-width: 600px) {
+  .mhero__top { grid-template-columns: 1fr; }
+  .mavatar { order: -1; width: 64px; margin: 0 0 8px; }
+}
+
+/* ---------- Section head: Yuya label + left title ---------- */
+.head { text-align: left; max-width: none; align-items: stretch; gap: 0; margin-bottom: clamp(24px, 3vw, 36px); }
+.label { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; font-size: clamp(20px, 2.4vw, 24px); letter-spacing: -0.03em; text-transform: lowercase; position: relative; }
+.label::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line-2); transform-origin: left; transform: scaleX(var(--lx, 1)); }
+.label small { font-size: 15px; color: var(--muted); text-transform: none; }
+.head__row { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px 40px; align-items: end; margin-top: clamp(8px, 1.4vw, 16px); }
+.head__row p { margin: 0; justify-self: end; max-width: 42ch; text-align: left; }
+.h2 { font-weight: 500; letter-spacing: -0.06em; line-height: 1.08; font-size: clamp(2rem, 4.6vw, 3.6rem); }
+html[lang="zh"] .h2 { letter-spacing: -0.01em; }
+@media (max-width: 760px) { .head__row { grid-template-columns: 1fr; } .head__row p { justify-self: start; } }
+
+/* ---------- Project cards: Polo frame + Yuya overlay ---------- */
+.works { gap: 16px; }
+.pcard__frame { aspect-ratio: 1; }
+.pcard--big .pcard__frame { aspect-ratio: 2.05 / 1; }
+.pcard__shade { position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, color-mix(in srgb, var(--tint) 88%, transparent), transparent); pointer-events: none; z-index: 2; }
+.pcard__meta { position: absolute; left: 22px; right: 22px; top: 18px; display: flex; justify-content: space-between; font-size: 14px; opacity: 0.8; z-index: 3; letter-spacing: -0.02em; }
+.pcard__title { position: absolute; left: 22px; right: 70px; bottom: 20px; z-index: 3; font-size: clamp(1.4rem, 3vw, 2.3rem); font-weight: 500; letter-spacing: -0.05em; line-height: 1.05; }
+.pcard__title small { display: block; margin-top: 8px; font-size: 14px; letter-spacing: -0.02em; opacity: 0.75; }
+.pcard__go { left: auto; right: 18px; bottom: 18px; }
+.pcard__media .phone { --pw: clamp(92px, 11vw, 190px); }
+.pcard__media .phone:nth-child(2) { --pw: clamp(108px, 13vw, 220px); }
+@media (max-width: 760px) {
+  .pcard--big .pcard__frame { aspect-ratio: 1; }
+  .pcard__title small { display: none; }
+}
+
+/* ---------- Writing rows inside a card ---------- */
+.alist { padding: 6px clamp(14px, 2.4vw, 26px); }
+.arow { display: grid; grid-template-columns: minmax(110px, 1fr) minmax(0, 5fr) auto 40px; gap: 20px; align-items: center; padding: clamp(18px, 2.4vw, 26px) 0; border-top: 1px solid var(--line); transition: opacity 0.4s; }
+.arow:first-child { border-top: 0; }
+.alist:hover .arow { opacity: 0.4; }
+.alist .arow:hover { opacity: 1; }
+.arow__date { color: var(--muted); font-size: 14px; }
+.arow__title { font-size: clamp(1.15rem, 2vw, 1.6rem); letter-spacing: -0.05em; line-height: 1.2; }
+html[lang="zh"] .arow__title { letter-spacing: 0; }
+.arow__excerpt { display: block; margin-top: 6px; font-size: 14px; color: var(--muted); letter-spacing: -0.02em; line-height: 1.5; }
+.arow__go { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--chip); transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+.arow__go svg { width: 16px; height: 16px; }
+.arow:hover .arow__go { transform: rotate(45deg); }
+.with { align-items: flex-start; text-align: left; }
+@media (max-width: 760px) {
+  .arow { grid-template-columns: 1fr 40px; gap: 6px 12px; }
+  .arow .tag { display: none; }
+  .arow__go { grid-row: 1 / span 2; grid-column: 2; }
+}
+
+/* ---------- Process / services / why: Yuya big numbers ---------- */
+.step__n { font-size: clamp(2.4rem, 4vw, 3.4rem); font-weight: 600; letter-spacing: -0.07em; line-height: 0.9; color: var(--faint); }
+.step h3, .service h3 { font-weight: 500; letter-spacing: -0.04em; font-size: clamp(20px, 2vw, 24px); }
+.stat b { font-size: clamp(2.6rem, 5vw, 4rem); letter-spacing: -0.07em; }
+
+/* ---------- CTA: Yuya statement inside a Polo card ---------- */
+.cta { text-align: left; align-items: flex-start; padding: clamp(28px, 5vw, 64px); }
+.cta__big { margin: 0; font-size: clamp(1.8rem, 4.2vw, 3.2rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.06em; max-width: 20ch; }
+html[lang="zh"] .cta__big { letter-spacing: -0.01em; }
+.cta__mail { letter-spacing: -0.05em; }
+.cta__row { justify-content: flex-start; }
+
+/* ---------- Footer: Yuya 3 columns ---------- */
+.foot3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding: 24px 0; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); letter-spacing: -0.01em; }
+.foot3 > div:nth-child(2) { justify-self: center; text-align: center; }
+.foot3 > div:last-child { justify-self: end; text-align: right; }
+.foot3 a { color: var(--ink); }
+.foot3 a:hover { opacity: 0.7; }
+@media (max-width: 640px) {
+  .foot3 { grid-template-columns: 1fr; }
+  .foot3 > div { justify-self: start !important; text-align: left !important; }
+}
+
+/* ---------- Case study / writing heads ---------- */
+.cs-hero { text-align: left; }
+.cs-hero .hero__inner { align-items: flex-start; }
+.cs-title--big { font-size: clamp(3rem, 9.4vw, 11rem); font-weight: 600; letter-spacing: -0.075em; line-height: 0.98; text-transform: uppercase; }
+html[lang="zh"] .cs-title--big { letter-spacing: -0.05em; }
+.cs-title { font-weight: 600; letter-spacing: -0.06em; }
+.cs-meta { justify-content: flex-start; }
+.flow { justify-content: flex-start; }
+.filters { justify-content: flex-start; }
+.quote { text-align: left; letter-spacing: -0.05em; }
+.hero__lead { font-size: clamp(17px, 1.7vw, 21px); color: var(--ink-2); letter-spacing: -0.03em; }

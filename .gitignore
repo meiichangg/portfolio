@@ -1,0 +1,12 @@
+# File thiết kế gốc (rất nặng, tài liệu nội bộ) — không đưa lên GitHub
+project/
+
+# File chạy cục bộ / công cụ
+*.bat
+.claude/
+yeucau.txt
+
+# Rác hệ điều hành
+Thumbs.db
+desktop.ini
+.DS_Store
