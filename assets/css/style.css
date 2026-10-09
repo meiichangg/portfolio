@@ -86,7 +86,7 @@ em { font-style: normal; color: var(--muted); }
 .muted { color: var(--muted); }
 
 /* masks for text reveals */
-.line-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.line-mask { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.14em 0 0.12em; margin: -0.14em 0 -0.12em; }
 .line-mask > span { display: inline-block; will-change: transform; }
 
 /* underline link */
@@ -202,7 +202,7 @@ html[lang="zh"] .nav__links { letter-spacing: 0; font-size: 16px; }
   text-transform: uppercase;
 }
 html[lang="zh"] .hero__name { letter-spacing: -0.06em; }
-.hero__name .row { display: block; overflow: hidden; padding: 0.04em 0.06em 0.02em 0; margin-left: -0.04em; }
+.hero__name .row { display: block; overflow: hidden; padding: 0.16em 0.06em 0.14em 0; margin: -0.12em 0 -0.12em -0.04em; } /* chừa chỗ cho dấu tiếng Việt (Ũ, Ị…) */
 .hero__name .char { display: inline-block; will-change: transform; }
 .hero__name .word { display: inline-block; white-space: nowrap; }
 @media (max-width: 600px) {

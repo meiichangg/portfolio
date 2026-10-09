@@ -146,7 +146,7 @@ html[lang="zh"] .h2 { letter-spacing: -0.01em; }
 .hero__name { margin: 0; font-size: clamp(2.8rem, 8.6vw, 6.4rem); font-weight: 400; line-height: 1.08; letter-spacing: -0.045em; display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.25em; }
 html[lang="zh"] .hero__name { letter-spacing: -0.03em; }
 .hero__name .dim { color: var(--faint); }
-.hero__name .word { display: inline-flex; overflow: hidden; padding-bottom: 0.06em; }
+.hero__name .word { display: inline-flex; overflow: hidden; padding: 0.14em 0 0.14em; margin: -0.1em 0; } /* chừa chỗ cho dấu */
 .hero__name .char { display: inline-block; }
 .hero__arrow { width: clamp(30px, 3.4vw, 42px); height: clamp(30px, 3.4vw, 42px); border-radius: 10px; background: var(--card); box-shadow: var(--shadow); display: grid; place-items: center; align-self: center; }
 .hero__arrow svg { width: 45%; height: 45%; }

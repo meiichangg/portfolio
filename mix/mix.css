@@ -31,7 +31,7 @@ html[lang="zh"] { --font: "Noto Sans SC", "Inter", system-ui, sans-serif; }
 body { font-weight: 500; letter-spacing: -0.03em; }
 html[lang="zh"] body { letter-spacing: 0; }
 
-.line-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.line-mask { display: inline-block; overflow: hidden; vertical-align: top; padding: 0.14em 0 0.12em; margin: -0.14em 0 -0.12em; }
 .line-mask > span { display: inline-block; }
 
 /* nav: Polo pill + Yuya wordmark */
@@ -45,7 +45,7 @@ html[lang="zh"] body { letter-spacing: 0; }
 .mhero__top { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
 .mhero__name { margin: 0; font-size: clamp(2.6rem, 8.2vw, 9.5rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.075em; text-transform: uppercase; }
 html[lang="zh"] .mhero__name { letter-spacing: -0.06em; }
-.mhero__name .row { display: block; overflow: hidden; padding: 0.04em 0.06em 0.02em 0; margin-left: -0.04em; }
+.mhero__name .row { display: block; overflow: hidden; padding: 0.16em 0.06em 0.14em 0; margin: -0.12em 0 -0.12em -0.04em; } /* chừa chỗ cho dấu tiếng Việt */
 .mhero__name .word { display: inline-block; white-space: nowrap; }
 .mhero__name .dim { color: var(--faint); }
 .mhero__name .char { display: inline-block; }
