@@ -8,6 +8,7 @@ const L = (vi, en, zh) => ({ vi, en, zh });
 
 window.SITE = {
   name: "Vũ Thị Mai Trang",
+  nameEn: "Vu Thi Mai Trang", // tên không dấu — hiển thị khi chọn tiếng Anh
   nameZh: "武梅妆", // tên tiếng Trung — hiển thị khi chọn ngôn ngữ 中
   nameShort: "Mai Trang",
   nickname: "Chang.cee",

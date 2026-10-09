@@ -28,7 +28,13 @@
   };
   let lang = detect();
   const t = (k) => (I18N[k] && (I18N[k][lang] ?? I18N[k].en)) || k;
-  const fullName = () => (lang === "zh" && SITE.nameZh ? `${SITE.nameZh}（${SITE.name}）` : SITE.name);
+  const fullName = () => (lang === "zh" ? SITE.nameZh || SITE.name : lang === "en" ? SITE.nameEn || SITE.name : SITE.name);
+  // hai dòng tên ở hero (tiếng Trung: một dòng)
+  const nameRows = () => {
+    if (lang === "zh" && SITE.nameZh) return [SITE.nameZh];
+    const w = fullName().split(" ");
+    return [w.slice(0, 2).join(" "), w.slice(2).join(" ")];
+  };
   const tx = (o) => (o == null ? "" : typeof o === "string" ? o : o[lang] ?? o.en ?? "");
 
   /* ---------- theme ---------- */
@@ -181,7 +187,8 @@
   const nameWords = () => {
     const w = (s, dim) => `<span class="word ${dim ? "dim" : ""}">${[...s].map((c) => `<span class="char">${c}</span>`).join("")}</span>`;
     if (lang === "zh" && SITE.nameZh) return `${w(SITE.nameZh[0])}${w(SITE.nameZh.slice(1), true)}`; // 武 + 梅妆
-    return `${w("Vũ")}${w("Thị")}${w("Mai", true)}${w("Trang", true)}`;
+    const p = fullName().split(" "); // họ + tên đệm trắng, tên xám
+    return p.map((x, i) => w(x, i >= 2)).join("");
   };
 
   const pageHome = () => `
@@ -513,7 +520,7 @@
     nav.innerHTML = renderNav();
     footer.innerHTML = renderFooter();
     app.innerHTML = PAGE === "project" ? pageProject() : PAGE === "writing" ? pageWriting() : PAGE === "article" ? pageArticle() : pageHome();
-    if (PAGE === "home") document.title = `${lang === "zh" && SITE.nameZh ? SITE.nameZh : SITE.name} (Chang.cee) — ${t("hero.role")}`;
+    if (PAGE === "home") document.title = `${fullName()} (Chang.cee) — ${t("hero.role")}`;
     bindUI();
     initAvatar();
   };
@@ -599,7 +606,7 @@
     const probe = new Image();
     probe.onload = () => els.forEach((el) => {
       if ($("img", el)) return;
-      const im = document.createElement("img"); im.src = src; im.alt = SITE.name;
+      const im = document.createElement("img"); im.src = src; im.alt = fullName();
       el.prepend(im); el.classList.add("has-img");
     });
     probe.src = src;

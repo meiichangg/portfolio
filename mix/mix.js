@@ -36,7 +36,13 @@
   };
   let lang = detect();
   const t = (k) => (I18N[k] && (I18N[k][lang] ?? I18N[k].en)) || k;
-  const fullName = () => (lang === "zh" && SITE.nameZh ? `${SITE.nameZh}（${SITE.name}）` : SITE.name);
+  const fullName = () => (lang === "zh" ? SITE.nameZh || SITE.name : lang === "en" ? SITE.nameEn || SITE.name : SITE.name);
+  // hai dòng tên ở hero (tiếng Trung: một dòng)
+  const nameRows = () => {
+    if (lang === "zh" && SITE.nameZh) return [SITE.nameZh];
+    const w = fullName().split(" ");
+    return [w.slice(0, 2).join(" "), w.slice(2).join(" ")];
+  };
   const tx = (o) => (o == null ? "" : typeof o === "string" ? o : o[lang] ?? o.en ?? "");
 
   /* ---------- theme ---------- */
@@ -198,10 +204,8 @@
         <div class="mhero__top">
           <h1 class="mhero__name" aria-label="${esc(fullName())}">
             ${lang === "zh" && SITE.nameZh
-              ? `<span class="row">${bigWords(SITE.nameZh[0])}${bigWords(SITE.nameZh.slice(1), true)}</span>
-            <span class="row mhero__sub">${bigWords("Vũ Thị Mai Trang", true)}</span>`
-              : `<span class="row">${bigWords("Vũ Thị")}</span>
-            <span class="row">${bigWords("Mai Trang", true)}</span>`}
+              ? `<span class="row">${bigWords(SITE.nameZh[0])}${bigWords(SITE.nameZh.slice(1), true)}</span>`
+              : nameRows().map((r, i) => `<span class="row">${bigWords(r, i === 1)}</span>`).join("")}
           </h1>
           <span class="mavatar" data-avatar><span class="about__mono">MT</span></span>
         </div>
@@ -534,7 +538,7 @@
     nav.innerHTML = renderNav();
     footer.innerHTML = renderFooter();
     app.innerHTML = PAGE === "project" ? pageProject() : PAGE === "writing" ? pageWriting() : PAGE === "article" ? pageArticle() : pageHome();
-    if (PAGE === "home") document.title = `${lang === "zh" && SITE.nameZh ? SITE.nameZh : SITE.name} (Chang.cee) — ${t("hero.role")}`;
+    if (PAGE === "home") document.title = `${fullName()} (Chang.cee) — ${t("hero.role")}`;
     bindUI();
     initAvatar();
   };
@@ -620,7 +624,7 @@
     const probe = new Image();
     probe.onload = () => els.forEach((el) => {
       if ($("img", el)) return;
-      const im = document.createElement("img"); im.src = src; im.alt = SITE.name;
+      const im = document.createElement("img"); im.src = src; im.alt = fullName();
       el.prepend(im); el.classList.add("has-img");
     });
     probe.src = src;
