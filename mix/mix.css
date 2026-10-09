@@ -5,6 +5,8 @@
 
 :root {
   --font: "Inter", "Noto Sans SC", system-ui, sans-serif;
+  --pad: clamp(14px, 2vw, 22px);   /* lề hai bên (bản 2: 16–32px) */
+  --max: 1440px;                   /* nội dung rộng hơn → bớt khoảng trống hai bên */
 }
 /* Sáng = tinh thần Yuya: trắng tinh, card phẳng */
 :root[data-theme="light"] {
@@ -41,7 +43,7 @@ html[lang="zh"] body { letter-spacing: 0; }
 /* ---------- Hero: Yuya giant name ---------- */
 .mhero { padding-top: clamp(120px, 14vw, 160px); }
 .mhero__top { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
-.mhero__name { margin: 0; font-size: clamp(3.2rem, 11.2vw, 13rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.075em; text-transform: uppercase; }
+.mhero__name { margin: 0; font-size: clamp(2.6rem, 8.2vw, 9.5rem); font-weight: 600; line-height: 0.98; letter-spacing: -0.075em; text-transform: uppercase; }
 html[lang="zh"] .mhero__name { letter-spacing: -0.06em; }
 .mhero__name .row { display: block; overflow: hidden; padding: 0.04em 0.06em 0.02em 0; margin-left: -0.04em; }
 .mhero__name .word { display: inline-block; white-space: nowrap; }
