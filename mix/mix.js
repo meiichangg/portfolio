@@ -129,6 +129,7 @@
         <div>${t("m.version")}<br/><a href="${BASE}index.html">${t("m.v1")}</a> · <a href="${BASE}polo/index.html">${t("m.v2")}</a></div>
         <div>${t("footer.rights")}, ${SITE.nickname} ©${new Date().getFullYear()}<br/><a href="#top" data-top>${t("footer.top")} ↑</a></div>
       </div>
+      <div class="foot-mark" aria-hidden="true">${[..."Chang.cee"].map((c) => `<span>${c}</span>`).join("")}</div>
     </div>`;
 
   const head = (chip, title, sub = "", right = "") => `
@@ -139,7 +140,7 @@
 
   /* ---------- pieces ---------- */
   const projCard = (p, i, big = false) => `
-    <a class="pcard ${big ? "pcard--big" : ""}" href="project.html?p=${p.slug}" style="${tint(p)}" data-reveal data-spot>
+    <a class="pcard ${big ? "pcard--big" : ""}" href="project.html?p=${p.slug}" style="${tint(p)}" data-reveal data-spot data-cursor="${esc(t("cursor.view"))}">
       <div class="pcard__frame">
         <div class="pcard__media" data-media>${p.cover.map((c) => phone(img(p.slug, c), artCls(p), p.name, i < 2)).join("")}</div>
         <div class="pcard__shade"></div>
@@ -150,7 +151,7 @@
     </a>`;
 
   const postCard = (a) => `
-    <a class="post" href="article.html?a=${a.slug}" data-reveal>
+    <a class="post" href="article.html?a=${a.slug}" data-reveal data-cursor="${esc(t("cursor.read"))}">
       <div class="post__img ${a.cover ? "" : "post__img--blank"}">${a.cover ? `<img src="${asset(a.cover)}" alt="" loading="lazy"/>` : "density."}</div>
       <div class="post__body">
         <div class="post__meta"><span class="tag" style="padding:4px 8px;font-size:12px">${tx(a.tag)}</span><span>${fmtDate(a.date)}</span><span>· ${a.read} ${t("writing.min")}</span></div>
@@ -160,7 +161,7 @@
     </a>`;
 
   const articleRow = (a) => `
-    <a class="arow" href="article.html?a=${a.slug}">
+    <a class="arow" href="article.html?a=${a.slug}" data-cursor="${esc(t("cursor.read"))}">
       <span class="arow__date">${fmtDate(a.date)}</span>
       <span class="arow__title">${tx(a.title)}<span class="arow__excerpt">${tx(a.excerpt)}</span></span>
       <span class="tag">${tx(a.tag)}</span>
@@ -420,7 +421,7 @@
       ${p.states.length ? `
       <section class="section">
         <div class="wrap">${head(t("cs.states"), "", t("cs.statesSub"))}</div>
-        <div class="strip" data-drag>${p.states.map((s) => `<figure>${phone(img(p.slug, s), "", s)}<figcaption>${s}</figcaption></figure>`).join("")}</div>
+        <div class="strip" data-drag data-cursor="${esc(t("cursor.drag"))}">${p.states.map((s) => `<figure>${phone(img(p.slug, s), "", s)}<figcaption>${s}</figcaption></figure>`).join("")}</div>
       </section>` : ""}
 
       ${hasSpec ? `
@@ -461,7 +462,7 @@
     </div>
 
     <section class="section"><div class="wrap">
-      <a class="card card--pad next-card" href="project.html?p=${next.slug}" data-reveal data-spot>
+      <a class="card card--pad next-card" data-cursor="${esc(t("cursor.view"))}" href="project.html?p=${next.slug}" data-reveal data-spot>
         <span class="spot"></span>
         <div><small>${t("cs.next")}</small><b>${esc(next.name)}</b></div>
         <span class="icon-btn">${I.right}</span>
@@ -509,7 +510,7 @@
     </div></section>
     <div class="wrap"><article class="prose" data-reveal>${tx(a.body)}</article></div>
     <section class="section"><div class="wrap">
-      <a class="card card--pad next-card" href="article.html?a=${next.slug}" data-reveal data-spot>
+      <a class="card card--pad next-card" data-cursor="${esc(t("cursor.view"))}" href="article.html?a=${next.slug}" data-reveal data-spot>
         <span class="spot"></span>
         <div><small>${t("writing.next")}</small><b style="font-size:clamp(1.4rem,3vw,2.2rem)">${tx(next.title)}</b></div>
         <span class="icon-btn">${I.right}</span>
@@ -623,9 +624,13 @@
 
   /* ---------- transitions ---------- */
   const curtain = $("#curtain");
+  const COVER = "inset(0% 0% 0% 0%)", BELOW = "inset(100% 0% 0% 0%)", ABOVE = "inset(0% 0% 100% 0%)";
   const fade = (fn) => {
     if (!hasGsap || !curtain) return fn();
-    gsap.timeline().to(curtain, { opacity: 1, duration: 0.3, ease: "power2.out" }).add(fn).to(curtain, { opacity: 0, duration: 0.5, ease: "power2.out", delay: 0.05 });
+    gsap.timeline()
+      .fromTo(curtain, { clipPath: BELOW }, { clipPath: COVER, duration: 0.55, ease: "power4.inOut" })
+      .add(fn)
+      .to(curtain, { clipPath: ABOVE, duration: 0.7, ease: "power4.inOut", delay: 0.05 });
   };
   document.addEventListener("click", (e) => {
     const a = e.target.closest("a");
@@ -635,9 +640,9 @@
     if (!/\.html/.test(href)) return;
     if (href.startsWith("index.html#") && PAGE === "home") return;
     e.preventDefault();
-    gsap.to(curtain, { opacity: 1, duration: 0.35, ease: "power2.out", onComplete: () => (location.href = href) });
+    gsap.fromTo(curtain, { clipPath: BELOW }, { clipPath: COVER, duration: 0.6, ease: "power4.inOut", onComplete: () => (location.href = href) });
   });
-  addEventListener("pageshow", (e) => { if (e.persisted && curtain && hasGsap) gsap.set(curtain, { opacity: 0 }); });
+  addEventListener("pageshow", (e) => { if (e.persisted && curtain && hasGsap) gsap.set(curtain, { clipPath: ABOVE }); });
 
   /* ---------- word splitter (giữ <em>, <br>) ---------- */
   const splitWords = (el) => {
@@ -664,6 +669,7 @@
   };
 
   /* ---------- motion ---------- */
+  let introDelay = 0.15; // dời hiệu ứng hero khi có màn chờ
   const initMotion = (first = true) => {
     if (!hasGsap) return;
     ctx = gsap.context(() => {
@@ -676,7 +682,7 @@
 
       $$("[data-split]").forEach((el) => {
         splitWords(el);
-        gsap.from($$(".sw", el), { yPercent: 115, duration: 1.1, ease: "expo.out", stagger: 0.025, delay: el.closest(".mhero, .cs-hero") && first ? 0.3 : 0,
+        gsap.from($$(".sw", el), { yPercent: 115, duration: 1.1, ease: "expo.out", stagger: 0.025, delay: el.closest(".mhero, .cs-hero") && first ? introDelay + 0.25 : 0,
           scrollTrigger: el.closest(".mhero, .cs-hero") ? undefined : { trigger: el, start: "top 90%" } });
       });
       // hairline under labels draws in
@@ -684,14 +690,45 @@
 
       const chars = $$(".mhero__name .char");
       if (first && chars.length) {
-        gsap.from(chars, { yPercent: 110, opacity: 0, duration: 1.1, ease: "expo.out", stagger: 0.03, delay: 0.15 });
-        gsap.from(".mavatar", { scale: 0, duration: 1.2, ease: "expo.out", delay: 0.6 });
+        gsap.from(chars, { yPercent: 115, rotateX: -75, transformOrigin: "50% 100%", opacity: 0, duration: 1.3, ease: "expo.out", stagger: 0.035, delay: introDelay });
+        gsap.from(".mavatar", { scale: 0, rotate: -120, duration: 1.4, ease: "expo.out", delay: introDelay + 0.5 });
       }
 
       // project media parallax
       $$("[data-media]").forEach((m) => {
-        $$(".phone", m).forEach((p, i) => gsap.fromTo(p, { y: [40, 0, 50][i] || 0 }, { y: [-20, 0, -26][i] || 0, ease: "none", scrollTrigger: { trigger: m, start: "top bottom", end: "bottom top", scrub: true } }));
+        gsap.fromTo(m, { yPercent: 7 }, { yPercent: -7, ease: "none", scrollTrigger: { trigger: m, start: "top bottom", end: "bottom top", scrub: true } });
       });
+
+      // hero: hai dòng tên trượt ngược chiều, avatar xoay khi cuộn
+      const rows = $$(".mhero__name .row");
+      if (rows.length === 2) {
+        const st = { trigger: ".mhero", start: "top top", end: "bottom top", scrub: true };
+        gsap.to(rows[0], { xPercent: -10, ease: "none", scrollTrigger: st });
+        gsap.to(rows[1], { xPercent: 10, ease: "none", scrollTrigger: { ...st } });
+        gsap.to(".mavatar", { rotate: 200, scale: 0.7, ease: "none", scrollTrigger: { ...st } });
+        gsap.to(".mhero__bottom", { yPercent: -20, opacity: 0.2, ease: "none", scrollTrigger: { trigger: ".mhero__bottom", start: "top 40%", end: "bottom top", scrub: true } });
+      }
+
+      // lưới dự án nghiêng nhẹ theo tốc độ cuộn
+      const works = $(".works");
+      if (works) {
+        const sk = gsap.quickTo(works, "skewY", { duration: 0.6, ease: "power3" });
+        ScrollTrigger.create({
+          trigger: works, start: "top bottom", end: "bottom top",
+          onUpdate: (st) => sk(gsap.utils.clamp(-2.2, 2.2, st.getVelocity() / -450)),
+          onLeave: () => sk(0), onLeaveBack: () => sk(0),
+        });
+      }
+
+      // ảnh minh hoạ quyết định UX: mở rộng khi cuộn tới
+      $$(".dec__vis").forEach((v) => gsap.fromTo(v, { clipPath: "inset(14% 14% 14% 14% round 14px)" }, { clipPath: "inset(0% 0% 0% 0% round 14px)", ease: "none", scrollTrigger: { trigger: v, start: "top bottom", end: "top 45%", scrub: true } }));
+
+      // các card quy trình xếp tầng
+      $$(".steps").forEach((g) => gsap.from($$(".step", g), { rotate: (i) => (i % 2 ? 2.5 : -2.5), yPercent: 18, duration: 1.2, ease: "expo.out", stagger: 0.1, scrollTrigger: { trigger: g, start: "top 85%" } }));
+
+      // chữ khổng lồ ở footer trồi lên
+      const mark = $$(".foot-mark span");
+      if (mark.length) gsap.from(mark, { yPercent: 105, ease: "none", stagger: 0.06, scrollTrigger: { trigger: ".foot-mark", start: "top bottom", end: "bottom bottom", scrub: 0.6 } });
 
       // counters
       $$("[data-count]").forEach((n) => {
@@ -728,6 +765,20 @@
       const bar = $("[data-progress]");
       if (bar) gsap.to(bar, { scaleX: 1, ease: "none", scrollTrigger: { trigger: ".prose", start: "top 60%", end: "bottom bottom", scrub: true } });
 
+      // card dự án nghiêng 3D theo chuột
+      if (finePointer) $$(".pcard").forEach((c) => {
+        const fr = $(".pcard__frame", c);
+        gsap.set(fr, { transformPerspective: 1100 });
+        const rx = gsap.quickTo(fr, "rotationX", { duration: 0.8, ease: "power3" });
+        const ry = gsap.quickTo(fr, "rotationY", { duration: 0.8, ease: "power3" });
+        c.addEventListener("pointermove", (e) => {
+          const r = c.getBoundingClientRect();
+          ry(((e.clientX - r.left) / r.width - 0.5) * 7);
+          rx(-((e.clientY - r.top) / r.height - 0.5) * 7);
+        });
+        c.addEventListener("pointerleave", () => { rx(0); ry(0); });
+      });
+
       // magnetic buttons
       if (finePointer) $$("[data-magnetic]").forEach((el) => {
         const qx = gsap.quickTo(el, "x", { duration: 0.6, ease: "power3" });
@@ -746,8 +797,93 @@
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
   }
+  // màn chờ: chỉ lần đầu vào trang chủ trong phiên
+  let seenLoader = null;
+  try { seenLoader = sessionStorage.getItem("mix-loader"); } catch {}
+  const useLoader = hasGsap && PAGE === "home" && !seenLoader && !location.hash;
+  if (useLoader) {
+    try { sessionStorage.setItem("mix-loader", "1"); } catch {}
+    introDelay = 1.75;
+    const ld = document.createElement("div");
+    ld.className = "mloader";
+    ld.setAttribute("aria-hidden", "true");
+    ld.innerHTML = `<div class="mloader__top"><span>Portfolio ©${new Date().getFullYear()}</span><span>UI/UX Designer</span></div>
+      <div class="mloader__name">${[..."Chang.cee"].map((c) => `<span>${c}</span>`).join("")}</div>
+      <div class="mloader__bottom"><span class="mloader__bar"><i></i></span><span class="mloader__count">000</span></div>`;
+    document.body.appendChild(ld);
+    lenis && lenis.stop();
+    const cnt = $(".mloader__count", ld), o = { v: 0 };
+    const ltl = gsap.timeline({ onComplete: () => { ld.remove(); lenis && lenis.start(); } });
+    setTimeout(() => ltl.progress() < 1 && ltl.progress(1), 4500); // dự phòng
+    ltl
+      .from($$(".mloader__name span", ld), { yPercent: 110, duration: 0.9, ease: "expo.out", stagger: 0.04 }, 0)
+      .to(o, { v: 100, duration: 1.3, ease: "power2.inOut", onUpdate: () => (cnt.textContent = String(Math.round(o.v)).padStart(3, "0")) }, 0)
+      .fromTo($(".mloader__bar i", ld), { scaleX: 0 }, { scaleX: 1, duration: 1.3, ease: "power2.inOut" }, 0)
+      .to($$(".mloader__name span", ld), { yPercent: -110, duration: 0.6, ease: "expo.in", stagger: 0.025 }, 1.35)
+      .to(ld, { clipPath: "inset(0% 0% 100% 0%)", duration: 0.9, ease: "power4.inOut" }, 1.5);
+  }
   initMotion(true);
-  if (hasGsap && curtain) gsap.fromTo(curtain, { opacity: 1 }, { opacity: 0, duration: 0.6, ease: "power2.out" });
+  // rèm mở ra khi vào trang
+  if (hasGsap && curtain) {
+    if (useLoader) gsap.set(curtain, { clipPath: ABOVE });
+    else {
+      const tw = gsap.fromTo(curtain, { clipPath: COVER }, { clipPath: ABOVE, duration: 0.85, ease: "power4.inOut", delay: 0.05 });
+      setTimeout(() => tw.progress() < 1 && tw.progress(1), 2500); // dự phòng nếu trình duyệt tạm dừng khung hình
+    }
+  }
+  root.classList.remove("pre");
+
+  // con trỏ tuỳ chỉnh
+  if (finePointer && !reduced) {
+    const cur = document.createElement("div");
+    cur.className = "mcursor";
+    cur.setAttribute("aria-hidden", "true");
+    cur.innerHTML = `<span class="mcursor__dot"></span><span class="mcursor__ring"><span></span></span>`;
+    document.body.appendChild(cur);
+    const lab = $(".mcursor__ring span", cur);
+    let x = -100, y = -100, cx = x, cy = y, rx = x, ry = y;
+    addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
+    const dot = $(".mcursor__dot", cur), ring = $(".mcursor__ring", cur);
+    const loop = () => {
+      cx += (x - cx) * 0.5; cy += (y - cy) * 0.5; rx += (x - rx) * 0.16; ry += (y - ry) * 0.16;
+      dot.style.transform = `translate3d(${cx}px,${cy}px,0)`;
+      ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
+      requestAnimationFrame(loop);
+    };
+    loop();
+    document.addEventListener("pointerover", (e) => {
+      const l = e.target.closest("[data-cursor]");
+      const h = e.target.closest("a, button");
+      cur.classList.toggle("is-label", !!l);
+      cur.classList.toggle("is-link", !l && !!h);
+      if (l) lab.textContent = l.dataset.cursor;
+    });
+    document.addEventListener("pointerleave", () => cur.classList.add("is-out"));
+    document.addEventListener("pointerenter", () => cur.classList.remove("is-out"));
+  }
+
+  // thanh tiến độ cuộn + nút lên đầu trang có vòng tiến độ
+  {
+    const prog = $("[data-progress]") ? null : document.body.appendChild(Object.assign(document.createElement("div"), { className: "mprogress" }));
+    const top = document.createElement("button");
+    top.type = "button";
+    top.className = "mtop";
+    top.setAttribute("aria-label", t("footer.top"));
+    top.innerHTML = `<svg class="mtop__ring" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"/></svg>`;
+    document.body.appendChild(top);
+    const circ = $("circle", top), C = 2 * Math.PI * 24;
+    circ.style.strokeDasharray = C;
+    top.addEventListener("click", () => (lenis ? lenis.scrollTo(0, { duration: 1.6 }) : window.scrollTo({ top: 0, behavior: "smooth" })));
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const pr = max > 0 ? Math.min(1, scrollY / max) : 0;
+      if (prog) prog.style.transform = `scaleX(${pr})`;
+      circ.style.strokeDashoffset = C * (1 - pr);
+      top.classList.toggle("is-on", scrollY > 700);
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
   if (location.hash) {
     const el = document.getElementById(location.hash.slice(1));
     if (el) setTimeout(() => (lenis ? lenis.scrollTo(el, { immediate: true, offset: -90 }) : el.scrollIntoView()), 60);
