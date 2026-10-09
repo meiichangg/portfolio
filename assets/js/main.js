@@ -27,6 +27,8 @@
   };
   let lang = detect();
   const t = (k) => (I18N[k] && (I18N[k][lang] ?? I18N[k].en)) || k;
+  // tên hiển thị theo ngôn ngữ: tiếng Trung dùng 武梅妆
+  const fullName = () => (lang === "zh" && SITE.nameZh ? `${SITE.nameZh}（${SITE.name}）` : SITE.name);
   const tx = (o) => (o == null ? "" : typeof o === "string" ? o : o[lang] ?? o.en ?? "");
 
   /* ---------- theme ---------- */
@@ -108,9 +110,11 @@
     <section class="hero" id="top">
       <div class="wrap">
         <div class="hero__top">
-          <h1 class="hero__name" aria-label="${esc(SITE.name)}">
-            <span class="row">${chars("Vũ Thị")}</span>
-            <span class="row">${chars("Mai Trang")}</span>
+          <h1 class="hero__name" aria-label="${esc(fullName())}">
+            ${lang === "zh" && SITE.nameZh
+              ? `<span class="row">${chars(SITE.nameZh)}</span>`
+              : `<span class="row">${chars("Vũ Thị")}</span>
+            <span class="row">${chars("Mai Trang")}</span>`}
           </h1>
           <span class="avatar" data-avatar><span class="avatar__mono">MT</span></span>
         </div>
@@ -178,7 +182,7 @@
             <p>${t("about.p2")}</p>
             <p>${t("about.p3")}</p>
             <dl class="info">
-              <dt>${t("about.info.name")}</dt><dd>${SITE.name}</dd>
+              <dt>${t("about.info.name")}</dt><dd>${fullName()}</dd>
               <dt>${t("about.info.nick")}</dt><dd>${SITE.nickname}</dd>
               <dt>${t("about.info.dob")}</dt><dd>${SITE.birthday}</dd>
               <dt>${t("about.info.focus")}</dt><dd>${t("about.info.focusv")}</dd>
@@ -405,7 +409,7 @@
     mm.innerHTML = renderMobileMenu();
     footer.innerHTML = renderFooter();
     app.innerHTML = PAGE === "project" ? pageProject() : PAGE === "writing" ? pageWriting() : PAGE === "article" ? pageArticle() : pageHome();
-    if (PAGE === "home") document.title = `${SITE.name} (Chang.cee) — ${t("hero.role")}`;
+    if (PAGE === "home") document.title = `${lang === "zh" && SITE.nameZh ? SITE.nameZh : SITE.name} (Chang.cee) — ${t("hero.role")}`;
     bindUI();
     initAvatar();
   };

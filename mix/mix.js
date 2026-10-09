@@ -36,6 +36,7 @@
   };
   let lang = detect();
   const t = (k) => (I18N[k] && (I18N[k][lang] ?? I18N[k].en)) || k;
+  const fullName = () => (lang === "zh" && SITE.nameZh ? `${SITE.nameZh}（${SITE.name}）` : SITE.name);
   const tx = (o) => (o == null ? "" : typeof o === "string" ? o : o[lang] ?? o.en ?? "");
 
   /* ---------- theme ---------- */
@@ -195,9 +196,12 @@
     <section class="hero mhero" id="top">
       <div class="wrap">
         <div class="mhero__top">
-          <h1 class="mhero__name" aria-label="${esc(SITE.name)}">
-            <span class="row">${bigWords("Vũ Thị")}</span>
-            <span class="row">${bigWords("Mai Trang", true)}</span>
+          <h1 class="mhero__name" aria-label="${esc(fullName())}">
+            ${lang === "zh" && SITE.nameZh
+              ? `<span class="row">${bigWords(SITE.nameZh[0])}${bigWords(SITE.nameZh.slice(1), true)}</span>
+            <span class="row mhero__sub">${bigWords("Vũ Thị Mai Trang", true)}</span>`
+              : `<span class="row">${bigWords("Vũ Thị")}</span>
+            <span class="row">${bigWords("Mai Trang", true)}</span>`}
           </h1>
           <span class="mavatar" data-avatar><span class="about__mono">MT</span></span>
         </div>
@@ -530,7 +534,7 @@
     nav.innerHTML = renderNav();
     footer.innerHTML = renderFooter();
     app.innerHTML = PAGE === "project" ? pageProject() : PAGE === "writing" ? pageWriting() : PAGE === "article" ? pageArticle() : pageHome();
-    if (PAGE === "home") document.title = `${SITE.name} (Chang.cee) — ${t("hero.role")}`;
+    if (PAGE === "home") document.title = `${lang === "zh" && SITE.nameZh ? SITE.nameZh : SITE.name} (Chang.cee) — ${t("hero.role")}`;
     bindUI();
     initAvatar();
   };

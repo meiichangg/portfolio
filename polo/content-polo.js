@@ -16,9 +16,9 @@
     "p.cta.contact": L("Liên hệ ngay", "Contact now", "立即联系"),
 
     "p.about.chip": L("Designer chuyên nghiệp", "Expert designer", "专业设计师"),
-    "p.about.title": L("Mai Trang, designer của bạn", "Mai Trang, your designer", "Mai Trang，你的设计师"),
+    "p.about.title": L("Mai Trang, designer của bạn", "Mai Trang, your designer", "武梅妆，你的设计师"),
     "p.about.sub": L("Giới thiệu ngắn về mình và những gì mình đã làm.", "A brief introduction to me and my experience.", "关于我和我经历的简短介绍。"),
-    "p.about.hello": L("Xin chào, mình là Mai Trang", "Hello, I'm Mai Trang", "你好，我是 Mai Trang"),
+    "p.about.hello": L("Xin chào, mình là Mai Trang", "Hello, I'm Mai Trang", "你好，我是武梅妆"),
     "p.about.role": L("UI/UX Designer · 3 năm kinh nghiệm · Mobile & Web", "UI/UX Designer · 3 years · Mobile & Web", "UI/UX 设计师 · 3 年经验 · 移动端与 Web"),
     "p.about.connect": L("Kết nối với mình", "Connect with me", "与我联系"),
 

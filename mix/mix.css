@@ -213,3 +213,6 @@ html.pre .curtain { clip-path: inset(0% 0% 0% 0%); }
 @media (prefers-reduced-motion: reduce) {
   .pcard:hover .pcard__media .phone { transform: none; }
 }
+
+/* tiếng Trung: tên 武梅妆 lớn, tên tiếng Việt nhỏ bên dưới */
+.mhero__sub { font-size: 0.3em; letter-spacing: -0.05em; margin-top: 0.15em; }

@@ -8,6 +8,7 @@ const L = (vi, en, zh) => ({ vi, en, zh });
 
 window.SITE = {
   name: "Vũ Thị Mai Trang",
+  nameZh: "武梅妆", // tên tiếng Trung — hiển thị khi chọn ngôn ngữ 中
   nameShort: "Mai Trang",
   nickname: "Chang.cee",
   birthday: "18.09.2002",
@@ -95,7 +96,7 @@ window.I18N = {
   "beyond.nda": L("Một số dự án thuộc NDA — có thể trình bày trực tiếp khi phỏng vấn.", "Some projects are under NDA — happy to walk through them in person.", "部分项目受保密协议约束——可在面试时当面讲解。"),
 
   "about.eyebrow": L("Giới thiệu", "About me", "关于我"),
-  "about.title": L("Xin chào, mình là <em>Trang</em> — mọi người hay gọi là Chang.cee.", "Hi, I'm <em>Trang</em> — most people call me Chang.cee.", "你好，我是 <em>Trang</em>——大家都叫我 Chang.cee。"),
+  "about.title": L("Xin chào, mình là <em>Trang</em> — mọi người hay gọi là Chang.cee.", "Hi, I'm <em>Trang</em> — most people call me Chang.cee.", "你好，我是<em>武梅妆</em>——大家都叫我 Chang.cee。"),
   "about.p1": L(
     "Mình là UI/UX Designer với 3 năm kinh nghiệm. Phần lớn thời gian mình làm app mobile thương mại trên iOS & Android — nơi mỗi màn hình phải cân bằng giữa trải nghiệm người dùng và mục tiêu kinh doanh: quảng cáo (IAA), mua trong ứng dụng (IAP) hoặc kết hợp cả hai (Hybrid).",
     "I'm a UI/UX Designer with 3 years of experience. Most of my time goes into commercial mobile apps on iOS & Android — where every screen has to balance user experience with business goals: ads (IAA), in-app purchases (IAP), or both (Hybrid).",

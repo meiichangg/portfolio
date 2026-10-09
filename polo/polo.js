@@ -28,6 +28,7 @@
   };
   let lang = detect();
   const t = (k) => (I18N[k] && (I18N[k][lang] ?? I18N[k].en)) || k;
+  const fullName = () => (lang === "zh" && SITE.nameZh ? `${SITE.nameZh}（${SITE.name}）` : SITE.name);
   const tx = (o) => (o == null ? "" : typeof o === "string" ? o : o[lang] ?? o.en ?? "");
 
   /* ---------- theme ---------- */
@@ -117,7 +118,7 @@
   const renderFooter = () => `
     <div class="wrap">
       <div class="footer__grid">
-        <span>© ${new Date().getFullYear()} ${SITE.name} · ${SITE.nickname}</span>
+        <span>© ${new Date().getFullYear()} ${fullName()} · ${SITE.nickname}</span>
         <div class="footer__links">
           <a href="mailto:${SITE.email}">${SITE.email}</a>
           <a href="${BASE}index.html">${t("p.version")}</a>
@@ -179,6 +180,7 @@
   /* ---------- home ---------- */
   const nameWords = () => {
     const w = (s, dim) => `<span class="word ${dim ? "dim" : ""}">${[...s].map((c) => `<span class="char">${c}</span>`).join("")}</span>`;
+    if (lang === "zh" && SITE.nameZh) return `${w(SITE.nameZh[0])}${w(SITE.nameZh.slice(1), true)}`; // 武 + 梅妆
     return `${w("Vũ")}${w("Thị")}${w("Mai", true)}${w("Trang", true)}`;
   };
 
@@ -187,7 +189,7 @@
       <div class="wrap">
         <div class="hero__inner">
           <span class="chip" data-reveal><i></i>${t("p.hero.chip")}</span>
-          <h1 class="hero__name" aria-label="${esc(SITE.name)}">${nameWords()}<a class="hero__arrow" href="#contact" aria-label="${esc(t("nav.contact"))}">${I.arrow}</a></h1>
+          <h1 class="hero__name" aria-label="${esc(fullName())}">${nameWords()}<a class="hero__arrow" href="#contact" aria-label="${esc(t("nav.contact"))}">${I.arrow}</a></h1>
           <p class="hero__lead" data-reveal>${t("p.hero.lead")}</p>
           <div class="hero__ctas" data-reveal>
             <a class="btn btn--dark" href="#work" data-magnetic>${t("p.cta.projects")}</a>
@@ -511,7 +513,7 @@
     nav.innerHTML = renderNav();
     footer.innerHTML = renderFooter();
     app.innerHTML = PAGE === "project" ? pageProject() : PAGE === "writing" ? pageWriting() : PAGE === "article" ? pageArticle() : pageHome();
-    if (PAGE === "home") document.title = `${SITE.name} (Chang.cee) — ${t("hero.role")}`;
+    if (PAGE === "home") document.title = `${lang === "zh" && SITE.nameZh ? SITE.nameZh : SITE.name} (Chang.cee) — ${t("hero.role")}`;
     bindUI();
     initAvatar();
   };
