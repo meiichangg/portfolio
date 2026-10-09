@@ -195,11 +195,17 @@
     </section>`;
 
   /* ---------- home ---------- */
+  const BAND = ["UI/UX Design", "Mobile Apps", "IAA · IAP · Hybrid", "Dashboards", "Design Systems", "Chang.cee"];
+  const renderBand = () => {
+    const g = `<div class="band__group">${BAND.map((x, i) => `<span class="band__item ${i % 2 ? "is-outline" : ""}">${x}</span><span class="band__star">✦</span>`).join("")}</div>`;
+    return `<section class="band" aria-label="${BAND.join(", ")}"><div class="band__track" aria-hidden="true">${g}${g}</div></section>`;
+  };
   const bigWords = (text, dim = false) =>
     text.split(" ").map((w) => `<span class="word ${dim ? "dim" : ""}">${[...w].map((c) => `<span class="char">${c}</span>`).join("")}</span>`).join(" ");
 
   const pageHome = () => `
     <section class="hero mhero" id="top">
+      <div class="mglow" aria-hidden="true"></div>
       <div class="wrap">
         <div class="mhero__top">
           <h1 class="mhero__name" aria-label="${esc(fullName())}">
@@ -277,7 +283,7 @@
         ${head(t("p.process.chip"), t("p.process.title"), t("p.process.sub"))}
         <div class="steps">
           ${ABOUT.process.map((s, i) => `
-            <div class="card card--pad step" data-reveal data-spot>
+            <div class="card card--pad step" data-spot style="--i:${i}">
               <span class="spot"></span>
               <div class="step__top"><span class="step__ico">${I.step[i % I.step.length]}</span><span class="step__n">${i + 1}</span></div>
               <h3>${tx(s.t)}</h3>
@@ -361,6 +367,7 @@
         </div>
       </div>
     </section>
+    ${renderBand()}
     ${renderCTA()}`;
 
   /* ---------- case study ---------- */
@@ -553,7 +560,19 @@
 
   const closeMenu = () => { nav.classList.remove("is-open"); const b = $(".menu-btn"); b && b.setAttribute("aria-expanded", "false"); };
 
+  // chữ cuộn khi rê chuột: nhân đôi chữ, bản sao trượt lên thay chỗ
+  const addRoll = () => {
+    $$(".nav__links a, .btn:not([data-copy])").forEach((el) => {
+      if (el.dataset.roll || el.children.length) return;
+      const txt = el.textContent.trim();
+      if (!txt) return;
+      el.dataset.roll = "1";
+      el.innerHTML = `<span class="roll"><span>${esc(txt)}</span><span aria-hidden="true">${esc(txt)}</span></span>`;
+    });
+  };
+
   const bindUI = () => {
+    addRoll();
     $$("[data-lang]").forEach((b) => b.addEventListener("click", () => {
       if (b.dataset.lang === lang) return;
       lang = b.dataset.lang; store.set("lang", lang); writingFilter = "all"; closeMenu();
@@ -731,8 +750,45 @@
       // ảnh minh hoạ quyết định UX: mở rộng khi cuộn tới
       $$(".dec__vis").forEach((v) => gsap.fromTo(v, { clipPath: "inset(14% 14% 14% 14% round 14px)" }, { clipPath: "inset(0% 0% 0% 0% round 14px)", ease: "none", scrollTrigger: { trigger: v, start: "top bottom", end: "top 45%", scrub: true } }));
 
-      // các card quy trình xếp tầng
-      $$(".steps").forEach((g) => gsap.from($$(".step", g), { rotate: (i) => (i % 2 ? 2.5 : -2.5), yPercent: 18, duration: 1.2, ease: "expo.out", stagger: 0.1, scrollTrigger: { trigger: g, start: "top 85%" } }));
+      // card quy trình: xếp chồng khi cuộn (desktop), hiện dần (mobile)
+      gsap.matchMedia().add({ desk: "(min-width: 861px)", mob: "(max-width: 860px)" }, (c) => {
+        const steps = $$(".steps .step");
+        if (c.conditions.desk) {
+          steps.forEach((st, i) => {
+            const next = steps[i + 1];
+            if (!next) return;
+            gsap.to(st, { scale: 0.92, filter: "brightness(0.6)", ease: "none",
+              scrollTrigger: { trigger: next, start: "top bottom", end: () => `top ${100 + (i + 1) * 18}px`, scrub: true, invalidateOnRefresh: true } });
+          });
+        } else {
+          steps.forEach((st) => gsap.from(st, { y: 40, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: st, start: "top 90%" } }));
+        }
+      });
+
+      // đoạn văn sáng dần từng từ theo cuộn
+      $$(".about__text p, .quote").forEach((el) => {
+        splitWords(el);
+        gsap.fromTo($$(".sw", el), { opacity: 0.16 }, { opacity: 1, ease: "none", stagger: 0.08,
+          scrollTrigger: { trigger: el, start: "top 82%", end: "bottom 50%", scrub: true } });
+      });
+
+      // dải chữ khổng lồ: chạy ngang, nhanh hơn & đổi chiều theo cuộn
+      const band = $(".band__track");
+      if (band) {
+        const loop = gsap.to(band, { xPercent: -50, duration: 30, ease: "none", repeat: -1, paused: true });
+        let dir = 1;
+        ScrollTrigger.create({
+          trigger: ".band", start: "top bottom", end: "bottom top",
+          onToggle: (st) => (st.isActive ? loop.play() : loop.pause()),
+          onUpdate: (st) => {
+            const v = st.getVelocity();
+            if (v) dir = v > 0 ? 1 : -1;
+            gsap.to(loop, { timeScale: dir * (1 + Math.min(Math.abs(v) / 250, 5)), duration: 0.25, overwrite: true });
+            gsap.to(loop, { timeScale: dir, duration: 1, delay: 0.25 });
+          },
+        });
+        gsap.fromTo(".band", { rotate: -1.5 }, { rotate: 1.5, ease: "none", scrollTrigger: { trigger: ".band", start: "top bottom", end: "bottom top", scrub: true } });
+      }
 
       // chữ khổng lồ ở footer trồi lên
       const mark = $$(".foot-mark span");
@@ -772,6 +828,21 @@
 
       const bar = $("[data-progress]");
       if (bar) gsap.to(bar, { scaleX: 1, ease: "none", scrollTrigger: { trigger: ".prose", start: "top 60%", end: "bottom bottom", scrub: true } });
+
+      // quầng sáng bám theo chuột ở hero
+      const glow = $(".mglow"), hero = $(".mhero");
+      if (finePointer && glow && hero) {
+        const gx = gsap.quickTo(glow, "x", { duration: 1.2, ease: "power3" });
+        const gy = gsap.quickTo(glow, "y", { duration: 1.2, ease: "power3" });
+        hero.addEventListener("pointermove", (e) => { const r = hero.getBoundingClientRect(); gx(e.clientX - r.left); gy(e.clientY - r.top); gsap.to(glow, { opacity: 1, duration: 0.6 }); });
+        hero.addEventListener("pointerleave", () => gsap.to(glow, { opacity: 0, duration: 0.8 }));
+      }
+
+      // chữ ở footer nảy lên khi rê chuột
+      if (finePointer) $$(".foot-mark span").forEach((sp) => sp.addEventListener("pointerenter", () => {
+        if (gsap.isTweening(sp)) return;
+        gsap.fromTo(sp, { y: 0 }, { y: "-14%", duration: 0.28, ease: "power2.out", yoyo: true, repeat: 1 });
+      }));
 
       // card dự án nghiêng 3D theo chuột
       if (finePointer) $$(".pcard").forEach((c) => {
