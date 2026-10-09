@@ -150,10 +150,11 @@
     <a class="pcard ${big ? "pcard--big" : ""}" href="project.html?p=${p.slug}" style="${tint(p)}" data-reveal data-spot data-cursor="${esc(t("cursor.view"))}">
       <div class="pcard__frame">
         <div class="pcard__media" data-media>${p.cover.map((c) => phone(img(p.slug, c), artCls(p), p.name, i < 2)).join("")}</div>
-        <div class="pcard__shade"></div>
-        <div class="pcard__meta" style="color:${lum(p.tint) > 0.4 ? "#000" : "#fff"}"><span>${pad2(i + 1)} — ${p.model}</span><span>${p.year}</span></div>
-        <div class="pcard__title" style="color:${lum(p.tint) > 0.4 ? "#000" : "#fff"}">${esc(p.name)}<small>${tx(p.category)} · ${p.platform}</small></div>
         <span class="pcard__go">${I.arrow}</span>
+      </div>
+      <div class="pcard__body">
+        <div><h3>${esc(p.name)}</h3><p>${tx(p.category)}</p></div>
+        <div class="pcard__tags"><span class="tag">${p.model}</span><span class="tag">${p.platform}</span><span class="tag">${p.year}</span></div>
       </div>
     </a>`;
 
@@ -751,14 +752,15 @@
       $$(".dec__vis").forEach((v) => gsap.fromTo(v, { clipPath: "inset(14% 14% 14% 14% round 14px)" }, { clipPath: "inset(0% 0% 0% 0% round 14px)", ease: "none", scrollTrigger: { trigger: v, start: "top bottom", end: "top 45%", scrub: true } }));
 
       // card quy trình: xếp chồng khi cuộn (desktop), hiện dần (mobile)
+      const STACK_TOP = 96, STACK_GAP = 16; // khớp với CSS .step { top }
       gsap.matchMedia().add({ desk: "(min-width: 861px)", mob: "(max-width: 860px)" }, (c) => {
         const steps = $$(".steps .step");
         if (c.conditions.desk) {
           steps.forEach((st, i) => {
             const next = steps[i + 1];
             if (!next) return;
-            gsap.to(st, { scale: 0.92, filter: "brightness(0.6)", ease: "none",
-              scrollTrigger: { trigger: next, start: "top bottom", end: () => `top ${100 + (i + 1) * 18}px`, scrub: true, invalidateOnRefresh: true } });
+            gsap.to(st, { scale: 0.95, "--dim": 0.55, ease: "none",
+              scrollTrigger: { trigger: next, start: "top bottom", end: () => `top ${STACK_TOP + (i + 1) * STACK_GAP}px`, scrub: true, invalidateOnRefresh: true } });
           });
         } else {
           steps.forEach((st) => gsap.from(st, { y: 40, opacity: 0, duration: 1, ease: "power3.out", scrollTrigger: { trigger: st, start: "top 90%" } }));

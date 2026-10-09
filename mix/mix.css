@@ -79,21 +79,8 @@ html[lang="zh"] .intro { letter-spacing: -0.01em; line-height: 1.45; }
 html[lang="zh"] .h2 { letter-spacing: -0.01em; }
 @media (max-width: 760px) { .head__row { grid-template-columns: 1fr; } .head__row p { justify-self: start; } }
 
-/* ---------- Project cards: Polo frame + Yuya overlay ---------- */
+/* ---------- Project cards: giống bản 2 (khung ảnh + tên & tag bên dưới) ---------- */
 .works { gap: 16px; }
-.pcard__frame { aspect-ratio: 1; }
-.pcard--big .pcard__frame { aspect-ratio: 2.05 / 1; }
-.pcard__shade { position: absolute; inset: auto 0 0 0; height: 45%; background: linear-gradient(to top, color-mix(in srgb, var(--tint) 88%, transparent), transparent); pointer-events: none; z-index: 2; }
-.pcard__meta { position: absolute; left: 22px; right: 22px; top: 18px; display: flex; justify-content: space-between; font-size: 14px; opacity: 0.8; z-index: 3; letter-spacing: -0.02em; }
-.pcard__title { position: absolute; left: 22px; right: 70px; bottom: 20px; z-index: 3; font-size: clamp(1.4rem, 3vw, 2.3rem); font-weight: 500; letter-spacing: -0.05em; line-height: 1.05; }
-.pcard__title small { display: block; margin-top: 8px; font-size: 14px; letter-spacing: -0.02em; opacity: 0.75; }
-.pcard__go { left: auto; right: 18px; bottom: 18px; }
-.pcard__media .phone { --pw: clamp(92px, 11vw, 190px); }
-.pcard__media .phone:nth-child(2) { --pw: clamp(108px, 13vw, 220px); }
-@media (max-width: 760px) {
-  .pcard--big .pcard__frame { aspect-ratio: 1; }
-  .pcard__title small { display: none; }
-}
 
 /* ---------- Writing rows inside a card ---------- */
 .alist { padding: 6px clamp(14px, 2.4vw, 26px); }
@@ -231,9 +218,12 @@ a:hover > .roll > span, button:hover > .roll > span { transform: translateY(-100
 
 /* card quy trình xếp chồng khi cuộn (desktop) */
 @media (min-width: 861px) {
-  .steps { display: flex; flex-direction: column; gap: 16px; }
-  .step { position: sticky; top: calc(100px + var(--i, 0) * 18px); min-height: 250px; transform-origin: center top; will-change: transform; }
-  .step:last-child:nth-child(odd) { grid-column: auto; min-height: 250px; }
+  .steps { display: flex; flex-direction: column; gap: 24px; padding-bottom: 40px; }
+  /* mọi card cao bằng nhau để card sau che kín card trước */
+  .step { position: sticky; top: calc(96px + var(--i, 0) * 16px); height: 260px; min-height: 0; transform-origin: center top; will-change: transform; overflow: hidden; }
+  .step:last-child:nth-child(odd) { grid-column: auto; min-height: 0; }
+  .step::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--bg); opacity: var(--dim, 0); pointer-events: none; z-index: 2; }
+  .step p { max-width: 70ch; }
 }
 
 /* dải chữ khổng lồ */
